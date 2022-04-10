@@ -13,13 +13,6 @@ public:
 	GLfloat getBufferHeight() { return bufferHeight; }
 	GLfloat getXChange();
 	GLfloat getYChange();
-	GLfloat getmuevex() { return muevex; }
-	GLfloat getCarMove() { return carMove; }
-	GLfloat getChopperX() { return chopperX; }
-	GLfloat getChopperY() { return chopperY; }
-	GLfloat getChopperZ() { return chopperZ; }
-	GLfloat getWarthogX() { return warthogX; }
-	GLfloat getWarthogZ() { return warthogZ; }
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
 	bool* getsKeys() { return keys; }
@@ -29,7 +22,6 @@ public:
 private: 
 	GLFWwindow *mainWindow;
 	GLint width, height;
-	GLfloat carMove, warthogX, warthogZ, chopperX, chopperY, chopperZ;
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
 	void createCallbacks();

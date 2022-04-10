@@ -14,12 +14,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	width = windowWidth;
 	height = windowHeight;
 	muevex = 2.0f;
-	carMove = 0.0f;
-	warthogX = 0.0f;
-	warthogZ = 0.0f;
-	chopperX = 0.0f;
-	chopperY = 5.0f;
-	chopperZ = -2.0f;
+
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -110,42 +105,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-	if (key == GLFW_KEY_O)
-	{
-		theWindow-> chopperX += 1.0;
-	}
-	if (key == GLFW_KEY_L)
-	{
-		theWindow-> chopperX -= 1.0;
-	}
-
-	if (key == GLFW_KEY_I) {
-		theWindow-> chopperY += 0.5f;
-	}
-	if (key == GLFW_KEY_K) {
-		theWindow-> chopperY -= .5f;
-	}
-
-	if (key == GLFW_KEY_U) {
-		theWindow-> chopperZ += 0.5f;
-	}
-	if (key == GLFW_KEY_J) {
-		theWindow-> chopperZ -= .5f;
-	}
-
-	if (key == GLFW_KEY_Y) {
-		theWindow->warthogX -= 0.5f;
-	}
-	if (key == GLFW_KEY_H) {
-		theWindow->warthogX += .5f;
-	}
-
-	if (key == GLFW_KEY_T) {
-		theWindow->warthogZ -= 0.5f;
-	}
-	if (key == GLFW_KEY_G) {
-		theWindow->warthogZ += .5f;
-	}
+	
 
 
 
