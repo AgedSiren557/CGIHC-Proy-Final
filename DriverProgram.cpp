@@ -28,6 +28,7 @@ Práctica 5: Carga de Modelos
 #include "Sphere.h"
 #include "Model.h"
 #include "Skybox.h"
+#include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f;
 
@@ -43,10 +44,20 @@ Texture pisoTexture;
 //opengl en texturas en carpeta texturas
 // en otros
 //modelos a cargar
-//Model Kitt_M;
+Model arbol1;
+Model arbol2;
+Model land;
+Model pochita;
+Model denji;
+Model avion;
+Model slide;
 
 
 Skybox skybox;
+
+//materiales
+Material Material_brillante;
+Material Material_opaco;
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
@@ -107,17 +118,6 @@ void CreateObjects()
 			0.0f, 1.0f, 0.0f,		0.5f, 1.0f,		0.0f, 0.0f, 0.0f
 	};
 
-	unsigned int floorIndices[] = {
-		0, 2, 1,
-		1, 2, 3
-	};
-
-	GLfloat floorVertices[] = {
-		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, -10.0f,	10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
-		-10.0f, 0.0f, 10.0f,	0.0f, 10.0f,	0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
-	};
 
 	unsigned int vegetacionIndices[] = {
 		0, 1, 2,
@@ -146,10 +146,6 @@ void CreateObjects()
 	Mesh *obj2 = new Mesh();
 	obj2->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj2);
-
-	Mesh *obj3 = new Mesh();
-	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
-	meshList.push_back(obj3);
 
 	Mesh* obj4 = new Mesh();
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
@@ -181,14 +177,27 @@ int main()
 
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
-	pisoTexture = Texture("Textures/piso.tga");
+	pisoTexture = Texture("Textures/land.tga");
 	pisoTexture.LoadTextureA();
 
 	/*
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/kitt_obj.obj");
 	*/
-
+	arbol1 = Model();
+	arbol1.LoadModel("Models/arbol1.obj");
+	arbol2 = Model();
+	arbol2.LoadModel("Models/tree1.obj");
+	land = Model();
+	land.LoadModel("Models/floor.obj");
+	pochita = Model();
+	pochita.LoadModel("Models/pochita.obj");
+	denji = Model();
+	denji.LoadModel("Models/denji.obj");
+	avion = Model();
+	avion.LoadModel("Models/legoPlane.obj");
+	slide = Model();
+	slide.LoadModel("Models/slide.obj");
 
 	std::vector<std::string> skyboxFaces;	//cubo de el paisaje de fondo cubemap, se desabilita el buffer de profundidad y colooca skybox en el inifnito
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -199,6 +208,8 @@ int main()
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
 
 	skybox = Skybox(skyboxFaces);
+	Material_brillante = Material(4.0f, 256);
+	Material_opaco = Material(0.3f, 4);
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -235,14 +246,73 @@ int main()
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
+		//piso
 		model = glm::mat4(1.0);
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		model = glm::rotate(model, -180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(31.0f, 0.0f, 31.0f));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		pisoTexture.UseTexture();
-		meshList[2]->RenderMesh();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		land.RenderModel();
 
+		//arbol 1 
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(8.0, 8.0f, 8.0f));
+		model = glm::translate(model, glm::vec3(-11.0f, 0.0f, 13.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		arbol1.RenderModel();
+
+		//arbol 1 - atras
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(4.0, 8.0f, 4.0f));
+		model = glm::translate(model, glm::vec3(-22.0f, 0.0f, 49.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		arbol1.RenderModel();
+
+		//arbol 2 - Pino 1
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(2.0, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(-21.0f, 0.0f, 46.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		arbol2.RenderModel();
+
+		//pochita
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(0.5, 0.5f, 0.5f));
+		model = glm::translate(model, glm::vec3(-300.0f, 2.4f, 250.0f));
+		model = glm::rotate(model, -180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		pochita.RenderModel();
+
+		//slide
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(3.0, 3.0f, 3.0f));
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, 45.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		slide.RenderModel();
+
+		//denji
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(0.5, 0.5f, 0.5f));
+		model = glm::translate(model, glm::vec3(-150.0f, 0.0f, 125.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		denji.RenderModel();
+
+		//avion
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(-30.0f, 20.0f, 20.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		avion.RenderModel();
 
 
 		glUseProgram(0);
